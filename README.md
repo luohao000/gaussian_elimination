@@ -1,4 +1,3 @@
-# gauss_elimination
 部分选主元的高斯消元法解线性方程组
 
 从文件 matrix.txt 中读取增广矩阵
