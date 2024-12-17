@@ -9,6 +9,6 @@ matrix.txt 中的第一行是矩阵 A 的维数 n
 
 可以从 matrix.txt 中输入矩阵
 
-将文件 matrix.txt 和 gauss.cpp 放在同一文件夹
+将文件 matrix.txt 和 gauss.exe 放在同一文件夹
 
 运行程序后会将解输出到文件 solution.txt 中
