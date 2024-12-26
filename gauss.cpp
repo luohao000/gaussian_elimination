@@ -1,15 +1,21 @@
 ﻿#include <iostream>
 #include <fstream>
+#include <chrono>
 using namespace std;
+using namespace chrono;
 
 // 从文件 matrix.txt 中读取增广矩阵
 // matrix.txt 中的第一行是矩阵 A 的维数 n
 // 后面 n 行是增广矩阵，矩阵同行元素用空格隔开
-// 可以从 matrix.txt 中输入矩阵，运行程序后会将解输出到文件 solution.txt 中
-void read_A(const char* fileName, double*& A, int& n)
+void read_A(const char *fileName, double *&A, int &n)
 {
-	FILE* file = NULL;
-	file = fopen(fileName, "r");
+	FILE *file = fopen(fileName, "r");
+	if (!file)
+	{
+		cerr << "Error: Unable to open file " << fileName << " for reading." << endl;
+		exit(EXIT_FAILURE);
+	}
+
 	fscanf(file, "%d", &n);
 	A = new double[n * (n + 1)];
 	for (int i = 0; i < n; i++)
@@ -23,28 +29,37 @@ void read_A(const char* fileName, double*& A, int& n)
 }
 
 // 将方程组的解输出到文件 solution.txt 中
-void export_x(const char* fileName, double* x, int n, int* loc)
+void export_x(const char *fileName, double *x, int n)
 {
 	ofstream os(fileName);
-	for (int i = 0; i < n - 1; i++)
+	if (!os)
+	{
+		cerr << "Error: Unable to open file " << fileName << " for writing." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	for (int i = 0; i < n; i++)
 	{
 		os << x[i] << endl;
 	}
-	os << x[n - 1];
 	os.close();
+	cout << "Solutions have been written to " << fileName << endl;
 }
 
 int main()
 {
+	auto start = system_clock::now();
+
 	int n;
-	int* loc;
-	double* x, * A;
+	int *loc;
+	double *x, *A;
 	double magnitude;
 	double t;
 	int picked;
 	int tmp;
 
 	read_A("matrix.txt", A, n);
+
 	x = new double[n];
 	loc = new int[n];
 
@@ -53,18 +68,27 @@ int main()
 		loc[i] = i;
 	}
 
-	for (int i = 0; i < n - 1; i++)
+	for (int i = 0; i < n; i++)
 	{
 		// 选主元
 		magnitude = 0;
 		for (int j = i; j < n; j++)
 		{
-			if (abs(A[loc[i] + j * n]) > magnitude)
+			if (abs(A[loc[j] + i * n]) > magnitude)
 			{
-				magnitude = A[loc[i] + j * n];
+				magnitude = abs(A[loc[j] + i * n]);
 				picked = j;
 			}
 		}
+		if (magnitude == 0)
+		{
+			cerr << "Error: Singular matrix detected during pivoting." << endl;
+			delete[] loc;
+			delete[] x;
+			delete[] A;
+			exit(EXIT_FAILURE);
+		}
+
 		tmp = loc[i];
 		loc[i] = loc[picked];
 		loc[picked] = tmp;
@@ -90,7 +114,11 @@ int main()
 		}
 	}
 
-	export_x("solution.txt", x, n, loc);
+	export_x("solution.txt", x, n);
+
+	auto end = system_clock::now();
+	auto duration = duration_cast<microseconds>(end - start);
+	cout << "Execution time: " << double(duration.count()) * microseconds::period::num / microseconds::period::den << " seconds" << endl;
 
 	delete[] loc;
 	delete[] x;
