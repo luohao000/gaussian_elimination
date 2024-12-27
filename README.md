@@ -1,3 +1,5 @@
+## 文件说明
+
 ### gauss_parallel.exe
 
 部分选主元高斯消元法的 mpi 并行程序，从 "matrix.txt" 中读取增广矩阵，解输出到 "p_solution.txt" 中。
