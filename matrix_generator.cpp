@@ -20,7 +20,7 @@ int main()
 	double **matrix = new double *[n];
 	for (int i = 0; i < n; ++i)
 	{
-		matrix[i] = new double[n];
+		matrix[i] = new double[n + 1]; // 按行储存矩阵
 	}
 
 	// 初始化随机数生成器
@@ -31,7 +31,7 @@ int main()
 	// 填充矩阵
 	for (int i = 0; i < n; ++i)
 	{
-		for (int j = 0; j < n; ++j)
+		for (int j = 0; j <= n; ++j)
 		{
 			matrix[i][j] = dist(gen);
 		}
@@ -57,7 +57,7 @@ int main()
 	// 写入矩阵数据
 	for (int i = 0; i < n; ++i)
 	{
-		for (int j = 0; j < n; ++j)
+		for (int j = 0; j <= n; ++j)
 		{
 			outfile << matrix[i][j] << " ";
 		}
