@@ -23,6 +23,7 @@ n*(n+1) 维矩阵，文件的第一行是 n，后面 n 行是增广矩阵，矩�
 1. 运行 matrix_generator
   - `make matrix_generator`
   - `./matrix_generator`
+  - `2000`(这里输入的是要生成的增广矩阵的行数)
 2. 运行 gauss_serial
   - `make gauss_serial`
   - `./gauss_serial`
@@ -32,4 +33,4 @@ n*(n+1) 维矩阵，文件的第一行是 n，后面 n 行是增广矩阵，矩�
 
 ### 注意事项
 
-当矩阵维数较大时（大约几千维时），并行程序才会明显快于串行程序。
+只有当矩阵维数较大时（大约上千维时），并行程序才会明显快于串行程序。
