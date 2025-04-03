@@ -22,7 +22,7 @@ void read_A(const char *fileName, double *&A, int &n)
 	{
 		for (int j = 0; j <= n; j++)
 		{
-			fscanf(file, "%lf", &A[i + j * n]); // 矩阵 A 是按列储存的, A_ij = A[i + j * n]
+			fscanf(file, "%lf", &A[i * (n + 1) + j]); // 矩阵 A 是按行储存的, A_ij = A[i * (n + 1) + j]
 		}
 	}
 	fclose(file);
@@ -74,9 +74,9 @@ int main()
 		magnitude = 0;
 		for (int j = i; j < n; j++)
 		{
-			if (abs(A[loc[j] + i * n]) > magnitude)
+			if (abs(A[loc[j] * (n + 1) + i]) > magnitude)
 			{
-				magnitude = abs(A[loc[j] + i * n]);
+				magnitude = abs(A[loc[j] * (n + 1) + i]);
 				picked = j;
 			}
 		}
@@ -96,10 +96,10 @@ int main()
 		// 消元
 		for (int j = i + 1; j < n; j++)
 		{
-			t = A[loc[j] + i * n] / A[loc[i] + i * n];
+			t = A[loc[j] * (n + 1) + i] / A[loc[i] * (n + 1) + i];
 			for (int k = i + 1; k <= n; k++)
 			{
-				A[loc[j] + k * n] = A[loc[j] + k * n] - A[loc[i] + k * n] * t;
+				A[loc[j] * (n + 1) + k] = A[loc[j] * (n + 1) + k] - A[loc[i] * (n + 1) + k] * t;
 			}
 		}
 	}
@@ -107,10 +107,10 @@ int main()
 	// 回代求解
 	for (int i = n - 1; i >= 0; i--)
 	{
-		x[i] = A[loc[i] + n * n] / A[loc[i] + i * n];
+		x[i] = A[loc[i] * (n + 1) + n] / A[loc[i] * (n + 1) + i];
 		for (int j = 0; j < i; j++)
 		{
-			A[loc[j] + n * n] = A[loc[j] + n * n] - x[i] * A[loc[j] + i * n];
+			A[loc[j] * (n + 1) + n] = A[loc[j] * (n + 1) + n] - x[i] * A[loc[j] * (n + 1) + i];
 		}
 	}
 
